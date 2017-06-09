@@ -6,14 +6,14 @@ version = "0.0.0"
 [lib]
 name = "rustc"
 path = "lib.rs"
-crate-type = ["dylib"]
+crate-type = ["dylib", "rlib"]
 
 [dependencies]
 arena = { path = "../libarena" }
 bitflags = "1.0"
 fmt_macros = { path = "../libfmt_macros" }
 graphviz = { path = "../libgraphviz" }
-jobserver = "0.1"
+jobserver = { path = "../jobserver" }
 log = { version = "0.4", features = ["release_max_level_info", "std"] }
 rustc_apfloat = { path = "../librustc_apfloat" }
 rustc_back = { path = "../librustc_back" }

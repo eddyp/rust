@@ -505,6 +505,12 @@ impl<'a> CrateLoader<'a> {
         }
     }
 
+    #[cfg(target_os = "redox")]
+    fn load_derive_macros(&mut self, _root: &CrateRoot, _dylib: Option<PathBuf>, span: Span)
+                          -> Vec<(ast::Name, Rc<SyntaxExtension>)> {
+        span_bug!(span, "proc-macro not yet supported on Redox")
+    }
+
     /// Load custom derive macros.
     ///
     /// Note that this is intentionally similar to how we load plugins today,
@@ -512,6 +518,7 @@ impl<'a> CrateLoader<'a> {
     /// implemented as dynamic libraries, but we have a possible future where
     /// custom derive (and other macro-1.1 style features) are implemented via
     /// executables and custom IPC.
+    #[cfg(not(target_os = "redox"))]
     fn load_derive_macros(&mut self, root: &CrateRoot, dylib: Option<PathBuf>, span: Span)
                           -> Vec<(ast::Name, Rc<SyntaxExtension>)> {
         use std::{env, mem};

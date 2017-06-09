@@ -779,6 +779,11 @@ fn exec_linker(sess: &Session, cmd: &mut Command, tmpdir: &Path)
     cmd2.arg(format!("@{}", file.display()));
     return cmd2.output();
 
+    #[cfg(target_os = "redox")]
+    fn command_line_too_big(_err: &io::Error) -> bool {
+        false
+    }
+
     #[cfg(unix)]
     fn command_line_too_big(err: &io::Error) -> bool {
         err.raw_os_error() == Some(::libc::E2BIG)

@@ -6,13 +6,13 @@ version = "0.0.0"
 [lib]
 name = "rustc_trans"
 path = "lib.rs"
-crate-type = ["dylib"]
+crate-type = ["dylib", "rlib"]
 test = false
 
 [dependencies]
 bitflags = "1.0"
 flate2 = "1.0"
-jobserver = "0.1.5"
+jobserver = { path = "../jobserver" }
 libc = "0.2"
 log = "0.4"
 num_cpus = "1.0"

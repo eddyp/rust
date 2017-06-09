@@ -21,14 +21,14 @@ use rustc::middle::exported_symbols::SymbolExportLevel;
 use rustc::session::config::{self, Lto};
 use rustc::util::common::time;
 use time_graph::Timeline;
-use {ModuleTranslation, ModuleLlvm, ModuleKind, ModuleSource};
+use {ModuleTranslation, /*ModuleLlvm,*/ ModuleKind, /*ModuleSource*/};
 
 use libc;
 
 use std::ffi::CString;
-use std::ptr;
+//use std::ptr;
 use std::slice;
-use std::sync::Arc;
+//use std::sync::Arc;
 
 pub fn crate_type_allows_lto(crate_type: config::CrateType) -> bool {
     match crate_type {
@@ -48,14 +48,14 @@ pub(crate) enum LtoModuleTranslation {
         _serialized_bitcode: Vec<SerializedModule>,
     },
 
-    Thin(ThinModule),
+    //Thin(ThinModule),
 }
 
 impl LtoModuleTranslation {
     pub fn name(&self) -> &str {
         match *self {
             LtoModuleTranslation::Fat { .. } => "everything",
-            LtoModuleTranslation::Thin(ref m) => m.name(),
+            //LtoModuleTranslation::Thin(ref m) => m.name(),
         }
     }
 
@@ -80,7 +80,7 @@ impl LtoModuleTranslation {
                 timeline.record("fat-done");
                 Ok(trans)
             }
-            LtoModuleTranslation::Thin(ref mut thin) => thin.optimize(cgcx, timeline),
+            //LtoModuleTranslation::Thin(ref mut thin) => thin.optimize(cgcx, timeline),
         }
     }
 
@@ -90,7 +90,7 @@ impl LtoModuleTranslation {
         match *self {
             // Only one module with fat LTO, so the cost doesn't matter.
             LtoModuleTranslation::Fat { .. } => 0,
-            LtoModuleTranslation::Thin(ref m) => m.cost(),
+            //LtoModuleTranslation::Thin(ref m) => m.cost(),
         }
     }
 }
@@ -190,7 +190,9 @@ pub(crate) fn run(cgcx: &CodegenContext,
         }
         Lto::Thin |
         Lto::ThinLocal => {
-            thin_lto(&diag_handler, modules, upstream_modules, &arr, timeline)
+            //thin_lto(&diag_handler, modules, upstream_modules, &arr, timeline)
+            info!("thin_lto disabled on Redox, falling back to fat_lto");
+            fat_lto(cgcx, &diag_handler, modules, upstream_modules, &arr, timeline)
         }
         Lto::No => unreachable!(),
     }
@@ -319,6 +321,7 @@ fn fat_lto(cgcx: &CodegenContext,
 /// calculating the *index* for ThinLTO. This index will then be shared amongst
 /// all of the `LtoModuleTranslation` units returned below and destroyed once
 /// they all go out of scope.
+/*
 fn thin_lto(diag_handler: &Handler,
             modules: Vec<ModuleTranslation>,
             serialized_modules: Vec<(SerializedModule, CString)>,
@@ -419,6 +422,7 @@ fn thin_lto(diag_handler: &Handler,
         }).collect())
     }
 }
+*/
 
 fn run_pass_manager(cgcx: &CodegenContext,
                     tm: TargetMachineRef,
@@ -520,6 +524,7 @@ impl Drop for ModuleBuffer {
     }
 }
 
+/*
 pub struct ThinModule {
     shared: Arc<ThinShared>,
     idx: usize,
@@ -744,3 +749,4 @@ impl ThinModule {
         Ok(mtrans)
     }
 }
+*/

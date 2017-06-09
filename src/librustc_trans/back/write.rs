@@ -9,7 +9,7 @@
 // except according to those terms.
 
 use back::bytecode::{self, RLIB_BYTECODE_EXTENSION};
-use back::lto::{self, ModuleBuffer, ThinBuffer};
+use back::lto::{self, ModuleBuffer};
 use back::link::{self, get_linker, remove};
 use back::command::Command;
 use back::linker::LinkerInfo;
@@ -664,12 +664,8 @@ unsafe fn codegen(cgcx: &CodegenContext,
 
 
     if write_bc || config.emit_bc_compressed {
-        let thin;
         let old;
-        let data = if llvm::LLVMRustThinLTOAvailable() {
-            thin = ThinBuffer::new(llmod);
-            thin.data()
-        } else {
+        let data = {
             old = ModuleBuffer::new(llmod);
             old.data()
         };

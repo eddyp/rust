@@ -136,6 +136,23 @@ mod tests {
     }
 }
 
+#[cfg(target_os = "redox")]
+mod dl {
+    use libc;
+    use std::ffi::OsStr;
+
+    pub fn open(_filename: Option<&OsStr>) -> Result<*mut u8, String> {
+        Err("dl::open not supported".to_string())
+    }
+
+    pub unsafe fn symbol(_handle: *mut u8, _symbol: *const libc::c_char) ->
+        Result<*mut u8, String> {
+        Err("dl::symbol not supported".to_string())
+    }
+
+    pub unsafe fn close(_handle: *mut u8) {}
+}
+
 #[cfg(unix)]
 mod dl {
     use libc;

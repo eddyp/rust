@@ -651,6 +651,12 @@ pub struct RustcDefaultCalls;
 
 // FIXME remove these and use winapi 0.3 instead
 // Duplicates: bootstrap/compile.rs, librustc_errors/emitter.rs
+#[cfg(target_os = "redox")]
+fn stdout_isatty() -> bool {
+    // FIXME: Implement isatty on Redox
+    false
+}
+
 #[cfg(unix)]
 fn stdout_isatty() -> bool {
     unsafe { libc::isatty(libc::STDOUT_FILENO) != 0 }

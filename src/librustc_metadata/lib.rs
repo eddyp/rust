@@ -33,6 +33,7 @@ extern crate syntax_pos;
 extern crate flate2;
 extern crate serialize as rustc_serialize; // used by deriving
 extern crate rustc_errors as errors;
+#[cfg(not(target_os = "redox"))]
 extern crate syntax_ext;
 extern crate proc_macro;
 

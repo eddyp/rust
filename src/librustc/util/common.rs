@@ -264,6 +264,11 @@ fn get_resident() -> Option<usize> {
     }
 }
 
+#[cfg(target_os = "redox")]
+fn get_resident() -> Option<usize> {
+    None
+}
+
 pub fn indent<R, F>(op: F) -> R where
     R: Debug,
     F: FnOnce() -> R,
@@ -332,7 +337,7 @@ pub fn path2cstr(p: &Path) -> CString {
     let p: &OsStr = p.as_ref();
     CString::new(p.as_bytes()).unwrap()
 }
-#[cfg(windows)]
+#[cfg(any(windows, target_os = "redox"))]
 pub fn path2cstr(p: &Path) -> CString {
     CString::new(p.to_str().unwrap()).unwrap()
 }
