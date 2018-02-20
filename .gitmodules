@@ -1,7 +1,7 @@
 [submodule "src/llvm"]
 	path = src/llvm
 	url = https://github.com/rust-lang/llvm.git
-	branch = master
+	branch = rust-llvm-release-4-0-1
 	shallow = true
 [submodule "src/rt/hoedown"]
 	path = src/rt/hoedown
